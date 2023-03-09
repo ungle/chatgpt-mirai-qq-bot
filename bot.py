@@ -238,9 +238,11 @@ GroupTrigger = Annotated[MessageChain, MentionMe(config.trigger.require_mention 
 
 @app.broadcast.receiver("GroupMessage", priority=19)
 async def group_message_listener(group: Group, source: Source, chain: GroupTrigger,member:Member):
-    if chain.display.startswith("."):
+    msg = chain.display
+    if msg.startswith("."):
         return
-    msg = member.name+":"+ chain.display
+    if config.response.remember_member:
+        msg = member.name+":"+ msg
     await handle_message(group, f"group-{group.id}", msg, source, chain)
 
 

@@ -168,6 +168,9 @@ class Response(BaseModel):
     quote: bool = True
     """是否回复触发的那条消息"""
 
+    remember_member:bool = True
+    """是否对qq群中不同成员进行辨识（在对话前自动加上成员昵称）"""
+
     timeout: float = 30.0
     """发送提醒前允许的响应时间"""
 
