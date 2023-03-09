@@ -88,6 +88,7 @@ async def handle_message(target: Union[Friend, Group], session_id: str, message:
     # 此处为会话不存在时可以执行的指令
     conversation_handler = await ConversationHandler.get_handler(session_id)
     conversation_context = None
+
     # 指定前缀对话
     if ' ' in message:
         for ai_type, prefixes in config.trigger.prefix_ai.items():
@@ -236,10 +237,11 @@ GroupTrigger = Annotated[MessageChain, MentionMe(config.trigger.require_mention 
 
 
 @app.broadcast.receiver("GroupMessage", priority=19)
-async def group_message_listener(group: Group, source: Source, chain: GroupTrigger):
+async def group_message_listener(group: Group, source: Source, chain: GroupTrigger,member:Member):
     if chain.display.startswith("."):
         return
-    await handle_message(group, f"group-{group.id}", chain.display, source, chain)
+    msg = member.name+":"+ chain.display
+    await handle_message(group, f"group-{group.id}", msg, source, chain)
 
 
 @app.broadcast.receiver("NewFriendRequestEvent")
